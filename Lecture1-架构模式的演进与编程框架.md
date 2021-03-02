@@ -24,6 +24,8 @@ Lecture1-架构模式的演进与编程框架
 # 4. 基于Spring的典型Web分层架构示例
 ![](img/lec1/2.png)
 
+1. servlet被很多厂商来实现
+
 # 5. 代码构建、部署、运行
 1. 简化Java开发
    1. DI、jdbcTemplate、AOP
