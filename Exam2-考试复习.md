@@ -33,27 +33,20 @@ Exam0-课程复习
 
 # 3. 第二节：依赖注入 —— Spring容器
 
-
 ## 3.1. Spring配置方案
 1. Spring框架负责创建对象和建立之间的关系
 2. 配置方法(告知Spring配置方案)
-   1. XML：最早
-   2. 自动化配置
-   3. JavaConfig
 
 ![](img/exam0/3.png)
 
-3. 创建上下文方式：
-   1. Config文件 + 注解
-   2. XML实现配置
 
-## 3.2. auto(section2-1)
+## 3.2. auto
 1. `@componentScan`：声明扫描包内的Component，进行对应的实例化。
    1. 等价于：`<context:component-scan base-package="..."/>`
    2. 无参数：扫描当前文件所在包
    3. 有参数：
       1. 不安全的：({"包名", "包名"})
-      2. 类型安全：(basePackageClasses = xxx.class)表示扫描该类所在的包
+      2. 类型安全：(basePackageClasses = xxx.class)扫描对应的包
       3. marked interface：保证类型的安全，同时保证类的重构不影响它，在这个类底下添加一个稳定的接口(标签接口)
 2. `@component`：告知框架，当前类需要实例化，等价于`@Named`
 3. `@Autowired`：自动装配(注入)，可以放在构造函数、setter上，等价于`@Inject`
@@ -61,28 +54,9 @@ Exam0-课程复习
    2. required参数：默认为true，可以修改为false表示允许该值为null
    3. 不必与`@Bean`同时使用，加上`@Bean`的方法的参数可以自动注入
    4. 可能涉及到的POM配置文件如下
+4. Spring的命名空间、XML文件配置法(`<context>`:命名空间)
 
-```xml
-<!-- https://mvnrepository.com/artifact/javax.inject/inject-api -->
-<dependency>
-    <groupId>javax.inject</groupId>
-    <artifactId>inject-api</artifactId>
-    <version>1.0.0-PRD</version>
-</dependency>
-
-
-<!-- https://mvnrepository.com/artifact/javax.inject/com.springsource.javax.inject -->
-<dependency>
-    <groupId>javax.inject</groupId>
-    <artifactId>com.springsource.javax.inject</artifactId>
-    <version>1.0.0</version>
-    <scope>provided</scope>
-</dependency>
-```
-
-5. Spring的命名空间、XML文件配置法(`<context>`:命名空间)
-
-## 3.3. JavaConfig(section2-2)
+## 3.3. JavaConfig
 1. 没有`@Component`，依靠在Config中编写，是基于Java的配置
 2. `@configuration`：声明一个配置类，告知框架读取配置
 3. `@Bean(name="xxx")`：声明一个Bean，并且可以自定义名称
@@ -114,12 +88,12 @@ public ShoppingCart cart(){....}
 
 5. 一般情况下配置类和业务类会分包存储。
 
-## 3.4. XML(section2-3)
+## 3.4. XML
 1. bean:`<bean id = "bean_name">`
    1. 不能进行类型检查
    2. 有构造函数参数(构造器注入)
       1. 元素：每个参数一条
-         1. 引用:`<constructor-arg ref="对象名">`
+         1. 引用:`<constructor-arg ref = "对象名">`
          2. 值:`<constructor-arg value ="参数内容、字面常量">`
       2. 属性：
          1. c-命名空间
@@ -149,7 +123,7 @@ public ShoppingCart cart(){....}
 2. xml文件名和测试类的名字一样，就不需要在测试的上下文配置中指定。
 3. **强依赖建议使用构造器注入**
 
-## 3.5. 混合(section2-4)
+## 3.5. 混合
 1. 混合配置：
    1. JavaConfig：类型检查简单
       1. `@Import(配置类.class, xxx)`
@@ -192,7 +166,7 @@ public class DataSourceConfig {
                 .build();
     }
     @Bean
-    @Profile("prod") //W生产环境
+    @Profile("prod") //生产环境
     public DataSource jndiDataSource() {
         JndiObjectFactoryBean jndiObjectFactoryBean = new JndiObjectFactoryBean();
         jndiObjectFactoryBean.setJndiName("jdbc/myDS");
@@ -215,16 +189,15 @@ public class xxx implements Conditonal{
 ```
 
 ### 3.6.3. 自动装配的歧义性
-1. `@Component` 或 `@Bean`
-2. `@Primary`
-3. 定义时
+1. `@Primary`
+2. 定义时
    1. `@Componet`或`@Bean`
    2. `@Qualifier("...")` 自定义限定符，通过使用`@Qualifier`注解，我们可以消除需要注入哪个bean的问题。
-4. 使用时
+3. 使用时
    1. `@Autowired`
-   2. `@Qualifier("…")`  bean名称或自定义限定符，默认Bean名是限定符
-5. <a href = "https://juejin.cn/post/6844904035342893063">Spring 注解 @Qualifier 详细解析</a>
-6. 可以自定义注解，这些注解本身也加了@Qualifier注解
+   2. `@Qualifier("...")`  bean名称或自定义限定符，默认Bean名是限定符
+4. <a href = "https://juejin.cn/post/6844904035342893063">Spring 注解 @Qualifier 详细解析</a>
+5. 可以自定义注解，这些注解本身也加了@Qualifier注解
    1. `@Cold`
    2. `@Creamy`
 
